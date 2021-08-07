@@ -15,7 +15,7 @@ interface SutTypes {
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
     async encrypt (value: string): Promise<string> {
-      return await Promise.resolve('encrypted value')
+      return await Promise.resolve('encrypted password')
     }
   }
   return new EncrypterStub()
@@ -28,7 +28,7 @@ const makeAddAccountRepository = (): AddAccountRepository => {
         id: 'valid id',
         name: 'valid name',
         email: 'valid email',
-        password: 'encrypted value'
+        password: 'encrypted password'
       }
       return await Promise.resolve(fakeAccount)
     }
@@ -86,7 +86,7 @@ describe('DbAddAccount', () => {
     expect(addSpy).toHaveBeenCalledWith({
       name: 'valid name',
       email: 'valid email',
-      password: 'encrypted value'
+      password: 'encrypted password'
     })
   })
 
@@ -116,7 +116,7 @@ describe('DbAddAccount', () => {
       id: 'valid id',
       name: 'valid name',
       email: 'valid email',
-      password: 'encrypted value'
+      password: 'encrypted password'
     })
   })
 })
