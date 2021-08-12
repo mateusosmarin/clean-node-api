@@ -1,6 +1,5 @@
-import express from 'express'
+import app from './config/app'
 
-const app = express()
 const port = 3030
 
 app.listen(port, () => {
