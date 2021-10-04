@@ -30,7 +30,7 @@ describe('Bcrypt Adapter', () => {
     expect(hash).toBe('hash')
   })
 
-  test('Should throw if bcrypt throws', async () => {
+  test('Should throw if hash throws', async () => {
     const sut = makeSut()
     jest
       .spyOn(bcrypt, 'hash')
@@ -59,7 +59,17 @@ describe('Bcrypt Adapter', () => {
       .spyOn(bcrypt, 'compare')
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       .mockImplementationOnce(async () => false)
-    const isValid = await sut.compare('any value', 'any_value')
+    const isValid = await sut.compare('any value', 'any_hash')
     expect(isValid).toBe(false)
+  })
+
+  test('Should throw if compare throws', async () => {
+    const sut = makeSut()
+    jest
+      .spyOn(bcrypt, 'compare')
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      .mockImplementationOnce(async () => await Promise.reject(new Error()))
+    const promise = sut.compare('any value', 'any_hash')
+    await expect(promise).rejects.toThrow()
   })
 })
