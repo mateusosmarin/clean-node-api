@@ -3,7 +3,7 @@ import {
   HttpResponse,
   Controller,
   AddAccount
-} from './signup-protocols'
+} from './signup-controller-protocols'
 import { badRequest, ok, serverError } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
 

@@ -1,11 +1,11 @@
 import { InvalidParamError } from '../../errors'
-import { CompareFieldValidation } from './compare-field-validation'
+import { CompareFieldsValidation } from './compare-fields-validation'
 
-const makeSut = (): CompareFieldValidation => {
-  return new CompareFieldValidation('field', 'fieldToCompare')
+const makeSut = (): CompareFieldsValidation => {
+  return new CompareFieldsValidation('field', 'fieldToCompare')
 }
 
-describe('RequiredFieldValidation', () => {
+describe('CompareFieldsValidation', () => {
   test('Should return a InvalidParamError if validation fails', () => {
     const sut = makeSut()
     const error = sut.validate({
