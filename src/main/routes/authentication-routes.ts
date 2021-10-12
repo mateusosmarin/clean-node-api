@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
 import { adaptRoute } from '../adapters/express/express-route-adapter'
+import { makeLoginController } from '../factories/login/login-factory'
 import { makeSignUpController } from '../factories/signup/signup-factory'
 
 export default async (router: Router): Promise<void> => {
-  const signUpController = makeSignUpController()
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  router.post('/signup', adaptRoute(signUpController))
+  router.post('/signup', adaptRoute(makeSignUpController()))
+  router.post('/login', adaptRoute(makeLoginController()))
 }
