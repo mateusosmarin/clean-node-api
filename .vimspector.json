@@ -1,0 +1,15 @@
+{
+  "configurations": {
+    "debug": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "protocol": "auto",
+        "request": "attach",
+        "address": "localhost",
+        "port": 9229,
+        "localRoot": "${workspaceRoot}",
+        "remoteRoot": "/app"
+      }
+    }
+  }
+}
