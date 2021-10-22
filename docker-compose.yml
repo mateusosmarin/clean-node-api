@@ -11,12 +11,12 @@ services:
       - "27017:27017"
   api:
     container_name: api
-    image: node:14-alpine
+    image: node:14
     working_dir: /app
     restart: always
-    command: bash -c "npm install --only production && npm run debug"
+    command: bash -c "npm install && npm run debug"
     volumes:
-      - ./dist:/app/dist
+      - ./dist/:/app/dist/
       - ./package.json:/app/package.json
     ports:
       - "3030:3030"
