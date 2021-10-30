@@ -1,12 +1,18 @@
+import { EmailInUseError } from '../../errors'
 import {
-  HttpRequest,
-  HttpResponse,
-  Controller,
-  AddAccount,
-  Authentication
-} from './signup-controller-protocols'
-import { badRequest, ok, serverError } from '../../helpers/http/http-helper'
+  badRequest,
+  forbidden,
+  ok,
+  serverError
+} from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
+import {
+  AddAccount,
+  Authentication,
+  Controller,
+  HttpRequest,
+  HttpResponse
+} from './signup-controller-protocols'
 
 export class SignUpController implements Controller {
   constructor (
@@ -33,6 +39,9 @@ export class SignUpController implements Controller {
       })
       return ok({ accessToken })
     } catch (error) {
+      if (error instanceof EmailInUseError) {
+        return forbidden(error)
+      }
       return serverError(error)
     }
   }
