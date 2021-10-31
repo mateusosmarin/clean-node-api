@@ -1,3 +1,4 @@
+import { EmailInUseError } from '../../../presentation/errors'
 import { LoadAccountByEmailRepository } from '../authentication/db-authentication-protocols'
 import {
   AccountModel,
@@ -15,12 +16,17 @@ export class DbAddAccount implements AddAccount {
   ) {}
 
   async add (accountData: AddAccountModel): Promise<AccountModel> {
-    await this.loadAccountByEmailRepository.loadByEmail(accountData.email)
+    const existingAccount = await this.loadAccountByEmailRepository.loadByEmail(
+      accountData.email
+    )
+    if (existingAccount != null) {
+      throw new EmailInUseError()
+    }
     const password = await this.hasher.hash(accountData.password)
-    const account = await this.addAccountRepository.add({
+    const newAccount = await this.addAccountRepository.add({
       ...accountData,
       password
     })
-    return account
+    return newAccount
   }
 }
