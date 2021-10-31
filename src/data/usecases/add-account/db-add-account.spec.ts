@@ -1,3 +1,4 @@
+import { EmailInUseError } from '../../../presentation/errors/email-in-use-error'
 import { DbAddAccount } from './db-add-account'
 import {
   AccountModel,
@@ -27,7 +28,7 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub
   implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel | null> {
-      return makeFakeAccount()
+      return null
     }
   }
   return new LoadAccountByEmailRepositoryStub()
@@ -113,6 +114,15 @@ describe('DbAddAccount', () => {
     const { sut } = makeSut()
     const account = await sut.add(makeFakeAccountData())
     expect(account).toEqual(makeFakeAccount())
+  })
+
+  test('Should throw EmailInUseError if LoadAccountByEmailRepository returns not null', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest
+      .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+      .mockResolvedValueOnce(makeFakeAccount())
+    const promise = sut.add(makeFakeAccountData())
+    await expect(promise).rejects.toThrowError(new EmailInUseError())
   })
 
   test('Should call LoadAccountByEmailRepository with correct email', async () => {
