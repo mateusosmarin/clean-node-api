@@ -5,8 +5,7 @@ import {
   ok,
   serverError
 } from '../../helpers/http/http-helper'
-import { HttpRequest } from '../../protocols'
-import { Validation } from '../../protocols/validation'
+import { HttpRequest, Validation } from '../../protocols'
 import { SignUpController } from './signup-controller'
 import {
   AccountModel,

@@ -5,7 +5,7 @@ import {
   ok,
   serverError
 } from '../../helpers/http/http-helper'
-import { Validation } from '../../protocols/validation'
+import { Validation } from '../../protocols'
 import {
   AddAccount,
   Authentication,
