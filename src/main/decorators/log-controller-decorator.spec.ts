@@ -39,7 +39,7 @@ const makeFakeServerError = (): HttpResponse => {
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-      return await new Promise((resolve) => resolve(ok(makeFakeAccount())))
+      return ok(makeFakeAccount())
     }
   }
   return new ControllerStub()
@@ -47,9 +47,7 @@ const makeController = (): Controller => {
 
 const makeLogErrorRepository = (): LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {
-    async logError (stack: string): Promise<void> {
-      return await new Promise((resolve) => resolve())
-    }
+    async logError (stack: string): Promise<void> {}
   }
   return new LogErrorRepositoryStub()
 }

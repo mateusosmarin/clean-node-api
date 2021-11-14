@@ -1,4 +1,8 @@
-import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
+import {
+  EmailInUseError,
+  MissingParamError,
+  ServerError
+} from '../../../errors'
 import {
   badRequest,
   forbidden,
@@ -40,7 +44,7 @@ const makeAddAccount = (): AddAccount => {
         email: 'valid_email@email.com',
         password: 'valid password'
       }
-      return await Promise.resolve(fakeAccount)
+      return fakeAccount
     }
   }
   return new AddAccountStub()
@@ -95,9 +99,7 @@ describe('Signup Controller', () => {
 
   test('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut()
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
-      return await Promise.reject(new Error())
-    })
+    jest.spyOn(addAccountStub, 'add').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })
