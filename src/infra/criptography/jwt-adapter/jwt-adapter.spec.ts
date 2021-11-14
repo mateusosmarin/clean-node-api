@@ -53,7 +53,7 @@ describe('JWT Adapter', () => {
       expect(value).toBe('any_value')
     })
 
-    test('Should throw if sign throws', async () => {
+    test('Should throw if verify throws', async () => {
       const sut = makeSut()
       jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
         throw new Error()
