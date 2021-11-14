@@ -4,6 +4,29 @@ import { AccessDeniedError } from '../errors'
 import { forbidden } from '../helpers/http/http-helper'
 import { AuthMiddleware } from './auth-middleware'
 
+interface SutTypes {
+  sut: AuthMiddleware
+  loadAccountByTokenStub: LoadAccountByToken
+}
+
+const makeSut = (): SutTypes => {
+  const loadAccountByTokenStub = makeLoadAccountByToken()
+  const sut = new AuthMiddleware(loadAccountByTokenStub)
+  return {
+    sut,
+    loadAccountByTokenStub
+  }
+}
+
+const makeLoadAccountByToken = (): LoadAccountByToken => {
+  class LoadAccountByTokenStub implements LoadAccountByToken {
+    async load (accessToken: string, role?: string): Promise<AccountModel> {
+      return makeFakeAccount()
+    }
+  }
+  return new LoadAccountByTokenStub()
+}
+
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid id',
   name: 'valid name',
@@ -13,26 +36,14 @@ const makeFakeAccount = (): AccountModel => ({
 
 describe('Auth Middleware', () => {
   test('Should return 403 if no x-access-token exists in headers', async () => {
-    class LoadAccountByTokenStub implements LoadAccountByToken {
-      async load (accessToken: string, role?: string): Promise<AccountModel> {
-        return makeFakeAccount()
-      }
-    }
-    const loadAccountByTokenStub = new LoadAccountByTokenStub()
-    const sut = new AuthMiddleware(loadAccountByTokenStub)
+    const { sut } = makeSut()
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
 
   test('Should call LoadAccountByToken with correct accessToken', async () => {
-    class LoadAccountByTokenStub implements LoadAccountByToken {
-      async load (accessToken: string, role?: string): Promise<AccountModel> {
-        return makeFakeAccount()
-      }
-    }
-    const loadAccountByTokenStub = new LoadAccountByTokenStub()
+    const { sut, loadAccountByTokenStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load')
-    const sut = new AuthMiddleware(loadAccountByTokenStub)
     await sut.handle({
       headers: {
         'x-access-token': 'any_token'
