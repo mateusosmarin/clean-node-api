@@ -4,16 +4,14 @@ services:
   mongo:
     container_name: mongo
     image: mongo:3
-    restart: always
     volumes:
-      - ./data:/data/db
+      - ./data/:/data/db/
     ports:
       - "27017:27017"
   api:
     container_name: api
     image: node:14
     working_dir: /app
-    restart: always
     command: bash -c "npm install && npm run debug"
     volumes:
       - ./dist/:/app/dist/
