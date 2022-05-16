@@ -48,42 +48,42 @@ describe('Survey Routes', () => {
         })
         .expect(403)
     })
-  })
 
-  test('Should return 204 on add survey with valid access token', async () => {
-    const res = await accountCollection.insertOne({
-      name: 'Mateus',
-      email: 'mateus.osmarin@gmail.com',
-      password: '123456',
-      role: 'admin'
-    })
-    const id = res.ops[0]._id
-    const accessToken = jwt.sign({ id }, env.jwtSecret)
-    await accountCollection.updateOne(
-      {
-        _id: id
-      },
-      {
-        $set: {
-          accessToken
-        }
-      }
-    )
-    await request(app)
-      .post('/api/surveys')
-      .set('x-access-token', accessToken)
-      .send({
-        question: 'Question',
-        answers: [
-          {
-            answer: 'Answer 1',
-            image: 'http://image-name.com'
-          },
-          {
-            answer: 'Answer 2'
-          }
-        ]
+    test('Should return 204 on add survey with valid access token', async () => {
+      const res = await accountCollection.insertOne({
+        name: 'Mateus',
+        email: 'mateus.osmarin@gmail.com',
+        password: '123456',
+        role: 'admin'
       })
-      .expect(204)
+      const id = res.ops[0]._id
+      const accessToken = jwt.sign({ id }, env.jwtSecret)
+      await accountCollection.updateOne(
+        {
+          _id: id
+        },
+        {
+          $set: {
+            accessToken
+          }
+        }
+      )
+      await request(app)
+        .post('/api/surveys')
+        .set('x-access-token', accessToken)
+        .send({
+          question: 'Question',
+          answers: [
+            {
+              answer: 'Answer 1',
+              image: 'http://image-name.com'
+            },
+            {
+              answer: 'Answer 2'
+            }
+          ]
+        })
+        .expect(204)
+    })
   })
 })
