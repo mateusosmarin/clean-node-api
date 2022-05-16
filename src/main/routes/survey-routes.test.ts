@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
 import { Collection } from 'mongodb'
 import request from 'supertest'
-import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
-import app from '../config/app'
-import env from '../config/env'
+import { MongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
+import app from '@main/config/app'
+import env from '@main/config/env'
 
 describe('Survey Routes', () => {
   let surveyCollection: Collection

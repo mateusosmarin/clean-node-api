@@ -1,4 +1,4 @@
-import { EmailInUseError } from '../../../presentation/errors/email-in-use-error'
+import { EmailInUseError } from '@presentation/errors/email-in-use-error'
 import { DbAddAccount } from './db-add-account'
 import {
   AccountModel,

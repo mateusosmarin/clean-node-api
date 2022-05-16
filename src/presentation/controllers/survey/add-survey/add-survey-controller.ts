@@ -2,8 +2,8 @@ import {
   badRequest,
   noContent,
   serverError
-} from '../../../helpers/http/http-helper'
-import { Validation } from '../../../protocols'
+} from '@presentation/helpers/http/http-helper'
+import { Validation } from '@presentation/protocols'
 import {
   AddSurvey,
   Controller,

@@ -1,5 +1,5 @@
-import { EmailInUseError } from '../../../presentation/errors'
-import { LoadAccountByEmailRepository } from '../authentication/db-authentication-protocols'
+import { EmailInUseError } from '@presentation/errors'
+import { LoadAccountByEmailRepository } from '@data/usecases/authentication/db-authentication-protocols'
 import {
   AccountModel,
   AddAccount,

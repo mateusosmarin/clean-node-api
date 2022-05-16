@@ -1,7 +1,7 @@
 import {
   Authentication,
   AuthenticationModel
-} from '../../../domain/usecases/authentication'
+} from '@domain/usecases/authentication'
 import {
   HashComparer,
   LoadAccountByEmailRepository,
