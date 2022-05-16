@@ -5,7 +5,7 @@ services:
     container_name: mongo
     image: mongo:3
     volumes:
-      - ./data/:/data/db/
+      - mongo_data:/data/db/
     ports:
       - "27017:27017"
   api:
@@ -23,3 +23,6 @@ services:
       - mongo
     environment:
       - "MONGO_URL=mongodb://mongo:27017/clean-node-api"
+
+volumes:
+  mongo_data:
