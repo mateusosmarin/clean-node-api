@@ -8,7 +8,7 @@ import {
 } from '@presentation/protocols'
 import { LogControllerDecorator } from './log-controller-decorator'
 
-interface SutTypes {
+type SUTTypes = {
   sut: LogControllerDecorator
   controllerStub: Controller
   logErrorRepositoryStub: LogErrorRepository
@@ -52,7 +52,7 @@ const makeLogErrorRepository = (): LogErrorRepository => {
   return new LogErrorRepositoryStub()
 }
 
-const makeSut = (): SutTypes => {
+const makeSUT = (): SUTTypes => {
   const controllerStub = makeController()
   const logErrorRepositoryStub = makeLogErrorRepository()
   const sut = new LogControllerDecorator(
@@ -68,20 +68,20 @@ const makeSut = (): SutTypes => {
 
 describe('LogControllerDecorator', () => {
   test('Should call controller handle', async () => {
-    const { sut, controllerStub } = makeSut()
+    const { sut, controllerStub } = makeSUT()
     const handleSpy = jest.spyOn(controllerStub, 'handle')
     await sut.handle(makeFakeRequest())
     expect(handleSpy).toHaveBeenCalledWith(makeFakeRequest())
   })
 
   test('Should return the same result of the controller', async () => {
-    const { sut } = makeSut()
+    const { sut } = makeSUT()
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok(makeFakeAccount()))
   })
 
   test('Should call LogErrorRepository with correct error if controller returns a server error', async () => {
-    const { sut, controllerStub, logErrorRepositoryStub } = makeSut()
+    const { sut, controllerStub, logErrorRepositoryStub } = makeSUT()
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'logError')
     jest
       .spyOn(controllerStub, 'handle')

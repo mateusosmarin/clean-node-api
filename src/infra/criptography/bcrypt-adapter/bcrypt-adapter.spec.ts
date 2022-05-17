@@ -12,27 +12,27 @@ jest.mock('bcrypt', () => ({
 
 const salt = 12
 
-const makeSut = (): BcryptAdapter => {
+const makeSUT = (): BcryptAdapter => {
   return new BcryptAdapter(salt)
 }
 
 describe('Bcrypt Adapter', () => {
   describe('hash()', () => {
     test('Should call hash with correct values', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       const hashSpy = jest.spyOn(bcrypt, 'hash')
       await sut.hash('any value')
       expect(hashSpy).toHaveBeenCalledWith('any value', salt)
     })
 
     test('Should return a valid hash on success', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       const hash = await sut.hash('any value')
       expect(hash).toBe('hash')
     })
 
     test('Should throw if hash throws', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       jest
         .spyOn(bcrypt, 'hash')
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -44,20 +44,20 @@ describe('Bcrypt Adapter', () => {
 
   describe('compare()', () => {
     test('Should call compare with correct values', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       const compareSpy = jest.spyOn(bcrypt, 'compare')
       await sut.compare('any value', 'any_value')
       expect(compareSpy).toHaveBeenCalledWith('any value', 'any_value')
     })
 
     test('Should return true when compare succeeds', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       const isValid = await sut.compare('any value', 'any_hash')
       expect(isValid).toBe(true)
     })
 
     test('Should return false when compare fails', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       jest
         .spyOn(bcrypt, 'compare')
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -67,7 +67,7 @@ describe('Bcrypt Adapter', () => {
     })
 
     test('Should throw if compare throws', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       jest
         .spyOn(bcrypt, 'compare')
         // eslint-disable-next-line @typescript-eslint/no-misused-promises

@@ -55,7 +55,7 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   return new UpdateAccessTokenRepositoryStub()
 }
 
-interface SutTypes {
+type SUTTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashComparerStub: HashComparer
@@ -63,7 +63,7 @@ interface SutTypes {
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
-const makeSut = (): SutTypes => {
+const makeSUT = (): SUTTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
   const hashComparerStub = makeHashComparer()
   const encrypterStub = makeEncrypter()
@@ -85,7 +85,7 @@ const makeSut = (): SutTypes => {
 
 describe('DbAuthentication', () => {
   test('Should call LoadAccountByEmailRepository with correct email', async () => {
-    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    const { sut, loadAccountByEmailRepositoryStub } = makeSUT()
     const loadByEmailSpy = jest.spyOn(
       loadAccountByEmailRepositoryStub,
       'loadByEmail'
@@ -95,7 +95,7 @@ describe('DbAuthentication', () => {
   })
 
   test('Should throw if LoadAccountByEmailRepository throws', async () => {
-    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    const { sut, loadAccountByEmailRepositoryStub } = makeSUT()
     jest
       .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
       .mockRejectedValueOnce(new Error())
@@ -104,7 +104,7 @@ describe('DbAuthentication', () => {
   })
 
   test('Should return null if LoadAccountByEmailRepository returns null', async () => {
-    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    const { sut, loadAccountByEmailRepositoryStub } = makeSUT()
     jest
       .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
       .mockResolvedValueOnce(null)
@@ -113,48 +113,48 @@ describe('DbAuthentication', () => {
   })
 
   test('Should call HashComparer with correct values', async () => {
-    const { sut, hashComparerStub } = makeSut()
+    const { sut, hashComparerStub } = makeSUT()
     const compareSpy = jest.spyOn(hashComparerStub, 'compare')
     await sut.auth(makeFakeAuthentication())
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 
   test('Should throw if HashComparer throws', async () => {
-    const { sut, hashComparerStub } = makeSut()
+    const { sut, hashComparerStub } = makeSUT()
     jest.spyOn(hashComparerStub, 'compare').mockRejectedValueOnce(new Error())
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
   test('Should return null if HashComparer returns false', async () => {
-    const { sut, hashComparerStub } = makeSut()
+    const { sut, hashComparerStub } = makeSUT()
     jest.spyOn(hashComparerStub, 'compare').mockResolvedValueOnce(false)
     const accessToken = await sut.auth(makeFakeAuthentication())
     expect(accessToken).toBeNull()
   })
 
   test('Should call Encrypter with correct id', async () => {
-    const { sut, encrypterStub } = makeSut()
+    const { sut, encrypterStub } = makeSUT()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
     await sut.auth(makeFakeAuthentication())
     expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
 
   test('Should throw if Encrypter throws', async () => {
-    const { sut, encrypterStub } = makeSut()
+    const { sut, encrypterStub } = makeSUT()
     jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error())
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
   test('Should call Encrypter with correct id', async () => {
-    const { sut } = makeSut()
+    const { sut } = makeSUT()
     const accessToken = await sut.auth(makeFakeAuthentication())
     expect(accessToken).toBe('any_token')
   })
 
   test('Should call UpdateAccessTokenRepository with correct values', async () => {
-    const { sut, updateAccessTokenRepositoryStub } = makeSut()
+    const { sut, updateAccessTokenRepositoryStub } = makeSUT()
     const updateAccessTokenSpy = jest.spyOn(
       updateAccessTokenRepositoryStub,
       'updateAccessToken'
@@ -164,7 +164,7 @@ describe('DbAuthentication', () => {
   })
 
   test('Should throw if UpdateAccessTokenRepository throws', async () => {
-    const { sut, updateAccessTokenRepositoryStub } = makeSut()
+    const { sut, updateAccessTokenRepositoryStub } = makeSUT()
     jest
       .spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
       .mockRejectedValueOnce(new Error())

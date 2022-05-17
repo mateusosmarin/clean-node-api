@@ -2,12 +2,12 @@ import { DbAddSurvey } from './db-add-survey'
 import { AddSurveyModel, AddSurveyRepository } from './db-add-survey-protocols'
 import MockDate from 'mockdate'
 
-interface SutTypes {
+type SUTTypes = {
   sut: DbAddSurvey
   addSurveyRepositoryStub: AddSurveyRepository
 }
 
-const makeSut = (): SutTypes => {
+const makeSUT = (): SUTTypes => {
   const addSurveyRepositoryStub = makeAddSurveyRepository()
   const sut = new DbAddSurvey(addSurveyRepositoryStub)
   return {
@@ -44,7 +44,7 @@ describe('DbAddSurvey UseCase', () => {
   })
 
   test('Should call AddSurveyRepository with correct values', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
+    const { sut, addSurveyRepositoryStub } = makeSUT()
     const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
     const surveyData = makeFakeSurveyData()
     await sut.add(surveyData)
@@ -52,7 +52,7 @@ describe('DbAddSurvey UseCase', () => {
   })
 
   test('Should trhow if AddSurveyRepository throws', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
+    const { sut, addSurveyRepositoryStub } = makeSUT()
     jest
       .spyOn(addSurveyRepositoryStub, 'add')
       .mockRejectedValueOnce(new Error())

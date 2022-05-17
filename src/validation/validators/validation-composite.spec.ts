@@ -16,7 +16,7 @@ interface SuTypes {
   validationStubs: Validation[]
 }
 
-const makeSut = (): SuTypes => {
+const makeSUT = (): SuTypes => {
   const validationStubs = [makeValidation(), makeValidation()]
   const sut = new ValidationComposite(...validationStubs)
   return { validationStubs, sut }
@@ -24,7 +24,7 @@ const makeSut = (): SuTypes => {
 
 describe('ValidationComposite', () => {
   test('Should return an error if any validation fails', () => {
-    const { sut, validationStubs } = makeSut()
+    const { sut, validationStubs } = makeSUT()
     jest
       .spyOn(validationStubs[0], 'validate')
       .mockReturnValueOnce(new MissingParamError('field'))
@@ -33,7 +33,7 @@ describe('ValidationComposite', () => {
   })
 
   test('Should return the first error if more than one validation fails', () => {
-    const { sut, validationStubs } = makeSut()
+    const { sut, validationStubs } = makeSUT()
     jest.spyOn(validationStubs[0], 'validate').mockReturnValueOnce(new Error())
     jest
       .spyOn(validationStubs[1], 'validate')
@@ -43,7 +43,7 @@ describe('ValidationComposite', () => {
   })
 
   test('Should not return if validation succeeds', () => {
-    const { sut } = makeSut()
+    const { sut } = makeSUT()
     const error = sut.validate({ field: 'any_value' })
     expect(error).toBeUndefined()
   })

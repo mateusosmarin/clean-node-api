@@ -2,7 +2,7 @@ import { Collection } from 'mongodb'
 import { MongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 
-const makeSut = (): SurveyMongoRepository => {
+const makeSUT = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
 }
 
@@ -28,7 +28,7 @@ describe('Survey Mongo Repository', () => {
 
   describe('add()', () => {
     test('Should add a survey on success', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       await sut.add({
         question: 'any_question',
         answers: [
@@ -51,7 +51,7 @@ describe('Survey Mongo Repository', () => {
 
   describe('loadAll()', () => {
     test('Should load all surveys on success', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       await surveyCollection.insertMany([{
         question: 'any_question',
         answers: [
@@ -78,7 +78,7 @@ describe('Survey Mongo Repository', () => {
     })
 
     test('should load empty list', async () => {
-      const sut = makeSut()
+      const sut = makeSUT()
       const surveys = await sut.loadAll()
       expect(surveys.length).toBe(0)
     })
