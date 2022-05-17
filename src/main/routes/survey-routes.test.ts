@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { Collection } from 'mongodb'
 import request from 'supertest'
-import { MongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
+import { mongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 import app from '@main/config/app'
 import env from '@main/config/env'
 
@@ -33,21 +33,21 @@ describe('Survey Routes', () => {
 
   beforeAll(async () => {
     if (process.env.MONGO_URL) {
-      await MongoHelper.connect(process.env.MONGO_URL)
+      await mongoHelper.connect(process.env.MONGO_URL)
     } else {
       throw new Error('MONGO_URL not set')
     }
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoHelper.disconnect()
   })
 
   beforeEach(async () => {
-    surveyCollection = await MongoHelper.getCollection('surveys')
+    surveyCollection = await mongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
 
-    accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = await mongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 

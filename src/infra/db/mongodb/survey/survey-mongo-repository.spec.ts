@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { MongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
+import { mongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 
 const makeSUT = (): SurveyMongoRepository => {
@@ -11,18 +11,18 @@ describe('Survey Mongo Repository', () => {
 
   beforeAll(async () => {
     if (process.env.MONGO_URL) {
-      await MongoHelper.connect(process.env.MONGO_URL)
+      await mongoHelper.connect(process.env.MONGO_URL)
     } else {
       throw new Error('MONGO_URL not set')
     }
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoHelper.disconnect()
   })
 
   beforeEach(async () => {
-    surveyCollection = await MongoHelper.getCollection('surveys')
+    surveyCollection = await mongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
   })
 

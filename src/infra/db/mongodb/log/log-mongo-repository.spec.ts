@@ -1,4 +1,4 @@
-import { MongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
+import { mongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
 import { LogMongoRepository } from './log-mongo-repository'
 
@@ -11,18 +11,18 @@ describe('Log Mongo Repository', () => {
 
   beforeAll(async () => {
     if (process.env.MONGO_URL) {
-      await MongoHelper.connect(process.env.MONGO_URL)
+      await mongoHelper.connect(process.env.MONGO_URL)
     } else {
       throw new Error('MONGO_URL not set')
     }
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoHelper.disconnect()
   })
 
   beforeEach(async () => {
-    errorCollection = await MongoHelper.getCollection('errors')
+    errorCollection = await mongoHelper.getCollection('errors')
     await errorCollection.deleteMany({})
   })
 

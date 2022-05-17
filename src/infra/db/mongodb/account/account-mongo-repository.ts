@@ -4,7 +4,7 @@ import { LoadAccountByTokenRepository } from '@data/protocols/db/account/load-ac
 import { UpdateAccessTokenRepository } from '@data/protocols/db/account/update-access-token-repository'
 import { AccountModel } from '@domain/models/account'
 import { AddAccountModel } from '@domain/usecases/add-account'
-import { MongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
+import { mongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 
 export class AccountMongoRepository
 implements
@@ -13,19 +13,19 @@ implements
     UpdateAccessTokenRepository,
     LoadAccountByTokenRepository {
   async add (accountData: AddAccountModel): Promise<AccountModel> {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    const accountCollection = await mongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
-    return MongoHelper.map(result.ops[0])
+    return mongoHelper.map(result.ops[0])
   }
 
   async loadByEmail (email: string): Promise<AccountModel> {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    const accountCollection = await mongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({ email })
-    return account && MongoHelper.map(account)
+    return account && mongoHelper.map(account)
   }
 
   async updateAccessToken (id: string, token: string): Promise<void> {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    const accountCollection = await mongoHelper.getCollection('accounts')
     await accountCollection.updateOne(
       {
         _id: id
@@ -39,7 +39,7 @@ implements
   }
 
   async loadByToken (token: string, role?: string): Promise<AccountModel> {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    const accountCollection = await mongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({
       accessToken: token,
       $or: [
@@ -51,6 +51,6 @@ implements
         }
       ]
     })
-    return account && MongoHelper.map(account)
+    return account && mongoHelper.map(account)
   }
 }
