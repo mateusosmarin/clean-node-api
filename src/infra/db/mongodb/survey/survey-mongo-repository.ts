@@ -2,8 +2,8 @@ import { LoadSurveysRepository } from '@data/protocols/db/survey/load-surveys-re
 import {
   AddSurveyModel,
   AddSurveyRepository
-} from '@data/usecases/add-survey/db-add-survey-protocols'
-import { LoadSurveyByIdRepository } from '@data/usecases/load-survey-by-id/db-load-survey-by-id.protocols'
+} from '@data/usecases/survey/add-survey/db-add-survey-protocols'
+import { LoadSurveyByIdRepository } from '@data/usecases/survey/load-survey-by-id/db-load-survey-by-id.protocols'
 import { SurveyModel } from '@domain/models/survey'
 import { mongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 

@@ -1,5 +1,5 @@
 import { AccountModel } from '@domain/models/account'
-import { AuthenticationModel } from '@domain/usecases/authentication'
+import { AuthenticationModel } from '@domain/usecases/account/authentication'
 import { DbAuthentication } from './db-authentication'
 import {
   HashComparer,
