@@ -20,12 +20,12 @@ implements
   async loadAll (): Promise<SurveyModel[]> {
     const surveyCollection = await mongoHelper.getCollection('surveys')
     const surveys: SurveyModel[] = await surveyCollection.find().toArray()
-    return surveys
+    return mongoHelper.map(surveys)
   }
 
   async loadById (id: string): Promise<SurveyModel> {
     const surveyCollection = await mongoHelper.getCollection('surveys')
     const survey: SurveyModel = await surveyCollection.findOne({ _id: id })
-    return survey
+    return survey && mongoHelper.map(survey)
   }
 }

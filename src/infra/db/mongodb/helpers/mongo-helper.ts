@@ -20,11 +20,16 @@ class MongoHelper {
     return this.client.db().collection(name)
   }
 
-  map (collection: any): any {
-    const { _id, ...collectionWithoutId } = collection
+  map (document: any): any
+  map (collection: any[]): any[]
+  map (documentOrCollection: any | any[]): any | any[] {
+    if (Array.isArray(documentOrCollection)) {
+      return documentOrCollection.map((c) => this.map(c))
+    }
+    const { _id, ...withoutId } = documentOrCollection
     return {
       id: _id,
-      ...collectionWithoutId
+      ...withoutId
     }
   }
 }
