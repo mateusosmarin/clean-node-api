@@ -3,7 +3,7 @@ import {
   Decrypter,
   LoadAccountByToken,
   LoadAccountByTokenRepository
-} from './db-load-account-by-token.protocols'
+} from './db-load-account-by-token-protocols'
 
 export class DbLoadAccountByToken implements LoadAccountByToken {
   constructor (
