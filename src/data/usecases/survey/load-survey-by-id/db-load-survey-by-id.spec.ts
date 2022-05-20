@@ -68,7 +68,7 @@ describe('DbLoadSurveys', () => {
     const { sut, loadSurveyByIdRepositoryStub } = makeSUT()
     jest
       .spyOn(loadSurveyByIdRepositoryStub, 'loadById')
-      .mockReturnValueOnce(Promise.reject(new Error()))
+      .mockRejectedValueOnce(new Error())
     const promise = sut.loadById('any_id')
     await expect(promise).rejects.toThrow()
   })
