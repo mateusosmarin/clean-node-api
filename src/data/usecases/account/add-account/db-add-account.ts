@@ -3,7 +3,7 @@ import { LoadAccountByEmailRepository } from '@data/usecases/account/authenticat
 import {
   AccountModel,
   AddAccount,
-  AddAccountModel,
+  AddAccountParams,
   AddAccountRepository,
   Hasher
 } from './db-add-account-protocols'
@@ -15,7 +15,7 @@ export class DbAddAccount implements AddAccount {
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
   ) {}
 
-  async add (accountData: AddAccountModel): Promise<AccountModel> {
+  async add (accountData: AddAccountParams): Promise<AccountModel> {
     const existingAccount = await this.loadAccountByEmailRepository.loadByEmail(
       accountData.email
     )

@@ -2,7 +2,7 @@ import { EmailInUseError } from '@presentation/errors/email-in-use-error'
 import { DbAddAccount } from './db-add-account'
 import {
   AccountModel,
-  AddAccountModel,
+  AddAccountParams,
   AddAccountRepository,
   Hasher,
   LoadAccountByEmailRepository
@@ -36,7 +36,7 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
 
 const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       return makeFakeAccount()
     }
   }
@@ -50,7 +50,7 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'hashed password'
 })
 
-const makeFakeAccountData = (): AddAccountModel => ({
+const makeFakeAccountData = (): AddAccountParams => ({
   name: 'valid name',
   email: 'valid email',
   password: 'valid password'
