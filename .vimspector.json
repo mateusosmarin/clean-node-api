@@ -5,6 +5,15 @@
       "configuration": {
         "protocol": "auto",
         "request": "attach",
+        "port": 9229,
+        "cwd": "${workspaceRoot}"
+      }
+    },
+    "remote-debug": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "protocol": "auto",
+        "request": "attach",
         "address": "localhost",
         "port": 9229,
         "localRoot": "${workspaceRoot}",
