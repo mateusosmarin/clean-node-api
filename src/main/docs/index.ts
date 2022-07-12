@@ -2,6 +2,7 @@ import { badRequest, serverError, unauthorized, notFound, forbidden } from './co
 import { loginPath, signUpPath, surveyPath } from './paths'
 import {
   accountSchema,
+  addSurveyParamsSchema,
   apiKeyAuthSchema,
   errorSchema,
   loginParamsSchema,
@@ -41,6 +42,7 @@ export default {
     account: accountSchema,
     loginParams: loginParamsSchema,
     signUpParams: signUpParamsSchema,
+    addSurveyParams: addSurveyParamsSchema,
     error: errorSchema,
     surveys: surveysSchema,
     survey: surveySchema,
