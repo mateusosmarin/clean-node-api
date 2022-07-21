@@ -65,20 +65,17 @@ describe('SurveyResult Mongo Repository', () => {
       const survey = await makeSurvey()
       const account = await makeAccount()
       const sut = makeSUT()
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[0].answer,
         date: new Date()
       })
+      const surveyResult = await surveyResultCollection.findOne({
+        surveyId: survey.id,
+        accountId: account.id
+      })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.surveyId).toEqual(survey.id)
-      expect(surveyResult.answers[0].count).toEqual(1)
-      expect(surveyResult.answers[0].percent).toEqual(100)
-      expect(surveyResult.answers[0].answer).toEqual(survey.answers[0].answer)
-      expect(surveyResult.answers[1].count).toEqual(0)
-      expect(surveyResult.answers[1].percent).toEqual(0)
-      expect(surveyResult.answers[1].answer).toEqual(survey.answers[1].answer)
     })
 
     test('Should update survey result if it is not new', async () => {
@@ -91,20 +88,20 @@ describe('SurveyResult Mongo Repository', () => {
         date: new Date()
       })
       const sut = makeSUT()
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[1].answer,
         date: new Date()
       })
-      expect(surveyResult).toBeTruthy()
-      expect(surveyResult.surveyId).toEqual(survey.id)
-      expect(surveyResult.answers[0].count).toEqual(1)
-      expect(surveyResult.answers[0].percent).toEqual(100)
-      expect(surveyResult.answers[0].answer).toEqual(survey.answers[1].answer)
-      expect(surveyResult.answers[1].count).toEqual(0)
-      expect(surveyResult.answers[1].percent).toEqual(0)
-      expect(surveyResult.answers[1].answer).toEqual(survey.answers[0].answer)
+      const surveyResults = await surveyResultCollection
+        .find({
+          surveyId: survey.id,
+          accountId: account.id
+        })
+        .toArray()
+      expect(surveyResults).toBeTruthy()
+      expect(surveyResults.length).toBe(1)
     })
   })
 
