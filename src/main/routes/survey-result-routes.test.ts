@@ -91,5 +91,27 @@ describe('Survey Result Routes', () => {
     test('Should return 403 on load survey result without access token', async () => {
       await request(app).get('/api/surveys/any_id/results').expect(403)
     })
+
+    test('Should return 200 on load survey result with access token', async () => {
+      const res = await surveyCollection.insertOne({
+        question: 'Question',
+        answers: [
+          {
+            answer: 'Answer 1',
+            image: 'http://image-name.com'
+          },
+          {
+            answer: 'Answer 2',
+            image: 'http://image-name.com'
+          }
+        ],
+        date: new Date()
+      })
+      const accessToken = await makeAccessToken()
+      await request(app)
+        .get(`/api/surveys/${String(res.ops[0]._id)}/results`)
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
   })
 })
