@@ -1,6 +1,7 @@
 import { mockSurveyResultModel, throwError } from '@domain/test'
 import { InvalidParamError } from '@presentation/errors'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '@presentation/test'
+import MockDate from 'mockdate'
 import { LoadSurveyResultController } from './load-survey-result-controller'
 import {
   forbidden,
@@ -34,6 +35,14 @@ const makeSUT = (): SUTTypes => {
 }
 
 describe('LoadSurveyResultController', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   test('Should call LoadSurveyById with correct value', async () => {
     const { sut, loadSurveyByIdStub } = makeSUT()
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
@@ -66,9 +75,7 @@ describe('LoadSurveyResultController', () => {
 
   test('Should return 500 if LoadSurveyById throws', async () => {
     const { sut, loadSurveyResultStub } = makeSUT()
-    jest
-      .spyOn(loadSurveyResultStub, 'load')
-      .mockImplementationOnce(throwError)
+    jest.spyOn(loadSurveyResultStub, 'load').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
