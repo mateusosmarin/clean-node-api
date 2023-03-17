@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { Collection } from 'mongodb'
 import request from 'supertest'
 
-describe('Survey Routes', () => {
+describe('Survey Result Routes', () => {
   let surveyCollection: Collection
   let accountCollection: Collection
 
@@ -84,6 +84,12 @@ describe('Survey Routes', () => {
           answer: 'Answer 1'
         })
         .expect(200)
+    })
+  })
+
+  describe('GET /surveys/:surveyId/results', () => {
+    test('Should return 403 on load survey result without access token', async () => {
+      await request(app).get('/api/surveys/any_id/results').expect(403)
     })
   })
 })
