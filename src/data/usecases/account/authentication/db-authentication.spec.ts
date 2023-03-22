@@ -44,9 +44,7 @@ describe('DbAuthentication', () => {
 
   test('Should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSUT()
-    jest
-      .spyOn(loadAccountByEmailRepositorySpy, 'loadByEmail')
-      .mockImplementationOnce(throwError)
+    loadAccountByEmailRepositorySpy.loadByEmail = throwError
     const promise = sut.auth(mockAuthenticationParams())
     await expect(promise).rejects.toThrow()
   })
@@ -67,14 +65,14 @@ describe('DbAuthentication', () => {
 
   test('Should throw if HashComparer throws', async () => {
     const { sut, hashComparerSpy } = makeSUT()
-    jest.spyOn(hashComparerSpy, 'compare').mockImplementationOnce(throwError)
+    hashComparerSpy.compare = throwError
     const promise = sut.auth(mockAuthenticationParams())
     await expect(promise).rejects.toThrow()
   })
 
   test('Should return null if HashComparer returns false', async () => {
     const { sut, hashComparerSpy } = makeSUT()
-    jest.spyOn(hashComparerSpy, 'compare').mockResolvedValueOnce(false)
+    hashComparerSpy.isValid = false
     const accessToken = await sut.auth(mockAuthenticationParams())
     expect(accessToken).toBeNull()
   })
@@ -87,7 +85,7 @@ describe('DbAuthentication', () => {
 
   test('Should throw if Encrypter throws', async () => {
     const { sut, encrypterSpy } = makeSUT()
-    jest.spyOn(encrypterSpy, 'encrypt').mockImplementationOnce(throwError)
+    encrypterSpy.encrypt = throwError
     const promise = sut.auth(mockAuthenticationParams())
     await expect(promise).rejects.toThrow()
   })
@@ -107,9 +105,7 @@ describe('DbAuthentication', () => {
 
   test('Should throw if UpdateAccessTokenRepository throws', async () => {
     const { sut, updateAccessTokenRepositorySpy } = makeSUT()
-    jest
-      .spyOn(updateAccessTokenRepositorySpy, 'updateAccessToken')
-      .mockImplementationOnce(throwError)
+    updateAccessTokenRepositorySpy.updateAccessToken = throwError
     const promise = sut.auth(mockAuthenticationParams())
     await expect(promise).rejects.toThrow()
   })

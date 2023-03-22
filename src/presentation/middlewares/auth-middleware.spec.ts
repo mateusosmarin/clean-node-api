@@ -59,9 +59,7 @@ describe('Auth Middleware', () => {
 
   test('Should return 500 if LoadAccountByToken throws', async () => {
     const { sut, loadAccountByTokenSpy } = makeSUT()
-    jest
-      .spyOn(loadAccountByTokenSpy, 'load')
-      .mockImplementationOnce(throwError)
+    loadAccountByTokenSpy.load = throwError
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })

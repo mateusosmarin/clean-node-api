@@ -46,7 +46,7 @@ describe('DbAddAccount', () => {
 
   test('Should throw if Hasher throws', async () => {
     const { sut, hasherSpy } = makeSUT()
-    jest.spyOn(hasherSpy, 'hash').mockImplementationOnce(throwError)
+    hasherSpy.hash = throwError
     const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow()
   })
@@ -63,9 +63,7 @@ describe('DbAddAccount', () => {
 
   test('Should throw if DbAddAccount throws', async () => {
     const { sut, addAccountRepositorySpy } = makeSUT()
-    jest
-      .spyOn(addAccountRepositorySpy, 'add')
-      .mockImplementationOnce(throwError)
+    addAccountRepositorySpy.add = throwError
     const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow()
   })

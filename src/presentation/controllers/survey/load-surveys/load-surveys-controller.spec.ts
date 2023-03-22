@@ -52,7 +52,7 @@ describe('LoadSurveysController', () => {
 
   test('Should return 500 if LoadSurveys throws', async () => {
     const { sut, loadSurveysSpy } = makeSUT()
-    jest.spyOn(loadSurveysSpy, 'load').mockImplementationOnce(throwError)
+    loadSurveysSpy.load = throwError
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(serverError(new Error()))
   })

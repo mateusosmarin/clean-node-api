@@ -40,9 +40,7 @@ describe('DbLoadSurveys', () => {
 
   test('Should throw if LoadSurveysRepository throws', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSUT()
-    jest
-      .spyOn(loadSurveysRepositorySpy, 'loadAll')
-      .mockImplementationOnce(throwError)
+    loadSurveysRepositorySpy.loadAll = throwError
     const promise = sut.load()
     await expect(promise).rejects.toThrow()
   })

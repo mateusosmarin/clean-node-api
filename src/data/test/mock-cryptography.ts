@@ -14,10 +14,11 @@ export class HasherSpy implements Hasher {
 
 export class DecrypterSpy implements Decrypter {
   ciphertext: string
+  plaintext: string | null = 'decrypted_token'
 
   async decrypt (ciphertext: string): Promise<string | null> {
     this.ciphertext = ciphertext
-    return 'decrypted_token'
+    return this.plaintext
   }
 }
 
@@ -33,10 +34,11 @@ export class EncrypterSpy implements Encrypter {
 export class HashComparerSpy implements HashComparer {
   plaintext: string
   digest: string
+  isValid = true
 
   async compare (plaintext: string, digest: string): Promise<boolean> {
     this.plaintext = plaintext
     this.digest = digest
-    return true
+    return this.isValid
   }
 }

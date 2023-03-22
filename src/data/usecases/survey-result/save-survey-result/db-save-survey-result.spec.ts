@@ -57,18 +57,14 @@ describe('DbSaveSurveyResult UseCase', () => {
 
   test('Should throw if SaveSurveyResultRepository throws', async () => {
     const { sut, saveSurveyResultRepositorySpy } = makeSUT()
-    jest
-      .spyOn(saveSurveyResultRepositorySpy, 'save')
-      .mockImplementationOnce(throwError)
+    saveSurveyResultRepositorySpy.save = throwError
     const promise = sut.save(mockSaveSurveyResultParams())
     await expect(promise).rejects.toThrow()
   })
 
   test('Should throw if LoadSurveyResultRepository throws', async () => {
     const { sut, loadSurveyResultRepositorySpy } = makeSUT()
-    jest
-      .spyOn(loadSurveyResultRepositorySpy, 'loadBySurveyId')
-      .mockImplementationOnce(throwError)
+    loadSurveyResultRepositorySpy.loadBySurveyId = throwError
     const promise = sut.save(mockSaveSurveyResultParams())
     await expect(promise).rejects.toThrow()
   })

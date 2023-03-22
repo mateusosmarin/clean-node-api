@@ -64,16 +64,14 @@ describe('Signup Controller', () => {
 
   test('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountSpy } = makeSUT()
-    jest.spyOn(addAccountSpy, 'add').mockImplementationOnce(throwError)
+    addAccountSpy.add = throwError
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 
   test('Should return 403 if AddAccount throws an EmailInUseError', async () => {
     const { sut, addAccountSpy } = makeSUT()
-    jest
-      .spyOn(addAccountSpy, 'add')
-      .mockRejectedValueOnce(new EmailInUseError())
+    addAccountSpy.add = async () => await Promise.reject(new EmailInUseError())
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
@@ -111,7 +109,7 @@ describe('Signup Controller', () => {
 
   test('Should return 500 if Authentication throws', async () => {
     const { sut, authenticationSpy } = makeSUT()
-    jest.spyOn(authenticationSpy, 'auth').mockImplementationOnce(throwError)
+    authenticationSpy.auth = throwError
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })

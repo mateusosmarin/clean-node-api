@@ -55,9 +55,7 @@ describe('LoadSurveyResultController', () => {
 
   test('Should return 500 if LoadSurveyById throws', async () => {
     const { sut, loadSurveyByIdSpy } = makeSUT()
-    jest
-      .spyOn(loadSurveyByIdSpy, 'loadById')
-      .mockImplementationOnce(throwError)
+    loadSurveyByIdSpy.loadById = throwError
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -70,7 +68,7 @@ describe('LoadSurveyResultController', () => {
 
   test('Should return 500 if LoadSurveyById throws', async () => {
     const { sut, loadSurveyResultSpy } = makeSUT()
-    jest.spyOn(loadSurveyResultSpy, 'load').mockImplementationOnce(throwError)
+    loadSurveyResultSpy.load = throwError
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
