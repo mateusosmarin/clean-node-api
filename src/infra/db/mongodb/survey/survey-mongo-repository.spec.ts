@@ -82,7 +82,7 @@ describe('Survey Mongo Repository', () => {
       expect(surveys[1].id).toBeTruthy()
     })
 
-    test('should load empty list', async () => {
+    test('Should load empty list', async () => {
       const sut = makeSUT()
       const surveys = await sut.loadAll()
       expect(surveys.length).toBe(0)

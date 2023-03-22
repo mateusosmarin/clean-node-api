@@ -31,26 +31,26 @@ describe('LoadSurveysController', () => {
     MockDate.reset()
   })
 
-  test('should call loadSurveys', async () => {
+  test('Should call loadSurveys', async () => {
     const { sut, loadSurveysSpy } = makeSUT()
     await sut.handle({})
     expect(loadSurveysSpy.callCount).toEqual(1)
   })
 
-  test('should return 200 on success', async () => {
+  test('Should return 200 on success', async () => {
     const { sut } = makeSUT()
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(ok(mockSurveysModel()))
   })
 
-  test('should return 204 if there are no surveys', async () => {
+  test('Should return 204 if there are no surveys', async () => {
     const { sut, loadSurveysSpy } = makeSUT()
     loadSurveysSpy.surveysModel = []
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(noContent())
   })
 
-  test('should return 500 if LoadSurveysStub throws', async () => {
+  test('Should return 500 if LoadSurveys throws', async () => {
     const { sut, loadSurveysSpy } = makeSUT()
     jest.spyOn(loadSurveysSpy, 'load').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle({})

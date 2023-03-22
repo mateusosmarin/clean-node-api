@@ -37,13 +37,13 @@ describe('DbLoadSurveyResult UseCase', () => {
     MockDate.reset()
   })
 
-  test('should call LoadSurveyResultRepository', async () => {
+  test('Should call LoadSurveyResultRepository', async () => {
     const { sut, loadSurveyResultRepositorySpy } = makeSUT()
     await sut.load('any_survey_id')
     expect(loadSurveyResultRepositorySpy.surveyId).toEqual('any_survey_id')
   })
 
-  test('should throw if SaveSurveyResultRepository throws', async () => {
+  test('Should throw if SaveSurveyResultRepository throws', async () => {
     const { sut, loadSurveyResultRepositorySpy } = makeSUT()
     jest
       .spyOn(loadSurveyResultRepositorySpy, 'loadBySurveyId')
@@ -52,7 +52,7 @@ describe('DbLoadSurveyResult UseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('should call LoadSurveyByIdRepository if LoadSurveyResultRepository returns null', async () => {
+  test('Should call LoadSurveyByIdRepository if LoadSurveyResultRepository returns null', async () => {
     const { sut, loadSurveyResultRepositorySpy, loadSurveyByIdRepositorySpy } =
       makeSUT()
     loadSurveyResultRepositorySpy.surveyResultModel = null
@@ -60,14 +60,14 @@ describe('DbLoadSurveyResult UseCase', () => {
     expect(loadSurveyByIdRepositorySpy.id).toEqual('any_survey_id')
   })
 
-  test('should return a SurveyResult with count 0 if LoadSurveyResultRepository returns null', async () => {
+  test('Should return a SurveyResult with count 0 if LoadSurveyResultRepository returns null', async () => {
     const { sut, loadSurveyResultRepositorySpy } = makeSUT()
     loadSurveyResultRepositorySpy.surveyResultModel = null
     const surveyResult = await sut.load('any_id')
     expect(surveyResult).toEqual(mockEmptySurveyResultModel())
   })
 
-  test('should return a SurveyResult on success', async () => {
+  test('Should return a SurveyResult on success', async () => {
     const { sut } = makeSUT()
     const surveyResult = await sut.load('any_survey_id')
     expect(surveyResult).toEqual(mockSurveyResultModel())
