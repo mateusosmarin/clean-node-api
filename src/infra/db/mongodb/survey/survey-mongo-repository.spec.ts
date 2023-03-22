@@ -91,7 +91,7 @@ describe('Survey Mongo Repository', () => {
 
   describe('loadById()', () => {
     test('Should load survey by id on success', async () => {
-      const res = await surveyCollection.insertOne({
+      const result = await surveyCollection.insertOne({
         question: 'any_question',
         answers: [
           {
@@ -101,7 +101,7 @@ describe('Survey Mongo Repository', () => {
         ],
         date: new Date()
       })
-      const id = res.ops[0]._id
+      const id = result.ops[0]._id
       const sut = makeSUT()
       const survey = await sut.loadById(id)
       expect(survey).toBeTruthy()

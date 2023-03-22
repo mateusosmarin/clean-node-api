@@ -10,13 +10,13 @@ describe('Survey Result Routes', () => {
   let accountCollection: Collection
 
   const makeAccessToken = async (): Promise<string> => {
-    const res = await accountCollection.insertOne({
+    const result = await accountCollection.insertOne({
       name: 'Mateus',
       email: 'mateus.osmarin@gmail.com',
       password: '123456',
       role: 'admin'
     })
-    const id = res.ops[0]._id
+    const id = result.ops[0]._id
     const accessToken = jwt.sign({ id }, env.jwtSecret)
     await accountCollection.updateOne(
       {
@@ -62,7 +62,7 @@ describe('Survey Result Routes', () => {
     })
 
     test('Should return 200 on save survey result with access token', async () => {
-      const res = await surveyCollection.insertOne({
+      const result = await surveyCollection.insertOne({
         question: 'Question',
         answers: [
           {
@@ -78,7 +78,7 @@ describe('Survey Result Routes', () => {
       })
       const accessToken = await makeAccessToken()
       await request(app)
-        .put(`/api/surveys/${String(res.ops[0]._id)}/results`)
+        .put(`/api/surveys/${String(result.ops[0]._id)}/results`)
         .set('x-access-token', accessToken)
         .send({
           answer: 'Answer 1'
@@ -93,7 +93,7 @@ describe('Survey Result Routes', () => {
     })
 
     test('Should return 200 on load survey result with access token', async () => {
-      const res = await surveyCollection.insertOne({
+      const result = await surveyCollection.insertOne({
         question: 'Question',
         answers: [
           {
@@ -109,7 +109,7 @@ describe('Survey Result Routes', () => {
       })
       const accessToken = await makeAccessToken()
       await request(app)
-        .get(`/api/surveys/${String(res.ops[0]._id)}/results`)
+        .get(`/api/surveys/${String(result.ops[0]._id)}/results`)
         .set('x-access-token', accessToken)
         .expect(200)
     })

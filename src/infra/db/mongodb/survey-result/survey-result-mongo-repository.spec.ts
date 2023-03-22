@@ -14,7 +14,7 @@ describe('SurveyResult Mongo Repository', () => {
   let accountCollection: Collection
 
   const makeSurvey = async (): Promise<SurveyModel> => {
-    const res = await surveyCollection.insertOne({
+    const result = await surveyCollection.insertOne({
       question: 'any_question',
       answers: [
         {
@@ -27,16 +27,16 @@ describe('SurveyResult Mongo Repository', () => {
       ],
       date: new Date()
     })
-    return mongoHelper.map(res.ops[0])
+    return mongoHelper.map(result.ops[0])
   }
 
   const makeAccount = async (): Promise<AccountModel> => {
-    const res = await accountCollection.insertOne({
+    const result = await accountCollection.insertOne({
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password'
     })
-    return mongoHelper.map(res.ops[0])
+    return mongoHelper.map(result.ops[0])
   }
 
   beforeAll(async () => {

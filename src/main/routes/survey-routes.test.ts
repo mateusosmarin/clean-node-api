@@ -10,13 +10,13 @@ describe('Survey Routes', () => {
   let accountCollection: Collection
 
   const makeAccessToken = async (): Promise<string> => {
-    const res = await accountCollection.insertOne({
+    const result = await accountCollection.insertOne({
       name: 'Mateus',
       email: 'mateus.osmarin@gmail.com',
       password: '123456',
       role: 'admin'
     })
-    const id = res.ops[0]._id
+    const id = result.ops[0]._id
     const accessToken = jwt.sign({ id }, env.jwtSecret)
     await accountCollection.updateOne(
       {

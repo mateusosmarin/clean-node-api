@@ -4,8 +4,8 @@ import { noCache } from './no-cache'
 
 describe('NoCache Middleware', () => {
   test('Should disable cache', async () => {
-    app.get('/test_no_cache', noCache, (req, res) => {
-      res.send()
+    app.get('/test_no_cache', noCache, (request, response) => {
+      response.send()
     })
     await request(app)
       .get('/test_no_cache')

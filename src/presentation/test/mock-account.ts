@@ -8,7 +8,7 @@ import { LoadAccountByToken } from '@presentation/middlewares/auth-middleware-pr
 
 export const mockAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountParams): Promise<AccountModel> {
+    async add (addAccountParams: AddAccountParams): Promise<AccountModel> {
       return mockAccountModel()
     }
   }
