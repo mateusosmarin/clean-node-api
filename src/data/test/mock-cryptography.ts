@@ -3,38 +3,40 @@ import { Encrypter } from '@data/protocols/cryptography/encrypter'
 import { HashComparer } from '@data/protocols/cryptography/hash-comparer'
 import { Hasher } from '@data/protocols/cryptography/hasher'
 
-export const mockHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return 'hashed_password'
-    }
+export class HasherSpy implements Hasher {
+  plaintext: string
+
+  async hash (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return 'hashed_password'
   }
-  return new HasherStub()
 }
 
-export const mockDecrypter = (): Decrypter => {
-  class DecrypterStub implements Decrypter {
-    async decrypt (value: string): Promise<string | null> {
-      return 'decrypted_token'
-    }
+export class DecrypterSpy implements Decrypter {
+  ciphertext: string
+
+  async decrypt (ciphertext: string): Promise<string | null> {
+    this.ciphertext = ciphertext
+    return 'decrypted_token'
   }
-  return new DecrypterStub()
 }
 
-export const mockEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
-      return 'any_token'
-    }
+export class EncrypterSpy implements Encrypter {
+  plaintext: string
+
+  async encrypt (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return 'any_token'
   }
-  return new EncrypterStub()
 }
 
-export const mockHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return true
-    }
+export class HashComparerSpy implements HashComparer {
+  plaintext: string
+  digest: string
+
+  async compare (plaintext: string, digest: string): Promise<boolean> {
+    this.plaintext = plaintext
+    this.digest = digest
+    return true
   }
-  return new HashComparerStub()
 }

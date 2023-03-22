@@ -1,61 +1,51 @@
-import { mockLoadAccountByTokenRepository, mockDecrypter } from '@data/test'
+import { DecrypterSpy, LoadAccountByTokenRepositorySpy } from '@data/test'
 import { mockAccountModel, throwError } from '@domain/test'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
-import {
-  Decrypter,
-  LoadAccountByTokenRepository
-} from './db-load-account-by-token-protocols'
 
 type SUTTypes = {
   sut: DbLoadAccountByToken
-  decrypterStub: Decrypter
-  loadAccountByTokenRepositoryStub: LoadAccountByTokenRepository
+  decrypterSpy: DecrypterSpy
+  loadAccountByTokenRepositorySpy: LoadAccountByTokenRepositorySpy
 }
 
 const makeSUT = (): SUTTypes => {
-  const decrypterStub = mockDecrypter()
-  const loadAccountByTokenRepositoryStub = mockLoadAccountByTokenRepository()
+  const decrypterSpy = new DecrypterSpy()
+  const loadAccountByTokenRepositorySpy = new LoadAccountByTokenRepositorySpy()
   const sut = new DbLoadAccountByToken(
-    decrypterStub,
-    loadAccountByTokenRepositoryStub
+    decrypterSpy,
+    loadAccountByTokenRepositorySpy
   )
   return {
     sut,
-    decrypterStub,
-    loadAccountByTokenRepositoryStub
+    decrypterSpy,
+    loadAccountByTokenRepositorySpy
   }
 }
 
 describe('DbLoadAccountByToken UseCase', () => {
   test('Should call Decrypter with correct values', async () => {
-    const { sut, decrypterStub } = makeSUT()
-    const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
+    const { sut, decrypterSpy } = makeSUT()
     await sut.load('any_token', 'any_role')
-    expect(decryptSpy).toHaveBeenCalledWith('any_token')
+    expect(decrypterSpy.ciphertext).toEqual('any_token')
   })
 
   test('Should return null if Decrypter returns null', async () => {
-    const { sut, decrypterStub } = makeSUT()
-    jest.spyOn(decrypterStub, 'decrypt').mockResolvedValueOnce(null)
+    const { sut, decrypterSpy } = makeSUT()
+    jest.spyOn(decrypterSpy, 'decrypt').mockResolvedValueOnce(null)
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
 
   test('Should call LoadAccountByTokenRepository with correct values', async () => {
-    const { sut, loadAccountByTokenRepositoryStub } = makeSUT()
-    const loadByTokenSpy = jest.spyOn(
-      loadAccountByTokenRepositoryStub,
-      'loadByToken'
-    )
+    const { sut, loadAccountByTokenRepositorySpy } = makeSUT()
     await sut.load('any_token', 'any_role')
-    expect(loadByTokenSpy).toHaveBeenCalledWith('any_token', 'any_role')
+    expect(loadAccountByTokenRepositorySpy.token).toEqual('any_token')
+    expect(loadAccountByTokenRepositorySpy.role).toEqual('any_role')
   })
 
   test('Should return null if LoadAccountByTokenRepository returns null', async () => {
-    const { sut, loadAccountByTokenRepositoryStub } = makeSUT()
-    jest
-      .spyOn(loadAccountByTokenRepositoryStub, 'loadByToken')
-      .mockResolvedValueOnce(null)
+    const { sut, loadAccountByTokenRepositorySpy } = makeSUT()
+    loadAccountByTokenRepositorySpy.accountModel = null
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
@@ -67,16 +57,16 @@ describe('DbLoadAccountByToken UseCase', () => {
   })
 
   test('Should throw if Decrypter throws', async () => {
-    const { sut, decrypterStub } = makeSUT()
-    jest.spyOn(decrypterStub, 'decrypt').mockImplementationOnce(throwError)
+    const { sut, decrypterSpy } = makeSUT()
+    jest.spyOn(decrypterSpy, 'decrypt').mockImplementationOnce(throwError)
     const promise = sut.load('any_token', 'any_role')
     await expect(promise).rejects.toThrow()
   })
 
   test('Should throw if LoadAccountByTokenRepository throws', async () => {
-    const { sut, loadAccountByTokenRepositoryStub } = makeSUT()
+    const { sut, loadAccountByTokenRepositorySpy } = makeSUT()
     jest
-      .spyOn(loadAccountByTokenRepositoryStub, 'loadByToken')
+      .spyOn(loadAccountByTokenRepositorySpy, 'loadByToken')
       .mockImplementationOnce(throwError)
     const promise = sut.load('any_token', 'any_role')
     await expect(promise).rejects.toThrow()

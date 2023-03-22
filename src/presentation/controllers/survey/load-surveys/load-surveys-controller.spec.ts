@@ -4,22 +4,21 @@ import {
   ok,
   serverError
 } from '@presentation/helpers/http/http-helper'
-import { mockLoadSurveys } from '@presentation/test'
+import { LoadSurveysSpy } from '@presentation/test'
 import MockDate from 'mockdate'
 import { LoadSurveysController } from './load-surveys-controller'
-import { LoadSurveys } from './load-surveys-controller-protocols'
 
 type SUTTypes = {
   sut: LoadSurveysController
-  loadSurveysStub: LoadSurveys
+  loadSurveysSpy: LoadSurveysSpy
 }
 
 const makeSUT = (): SUTTypes => {
-  const loadSurveysStub = mockLoadSurveys()
-  const sut = new LoadSurveysController(loadSurveysStub)
+  const loadSurveysSpy = new LoadSurveysSpy()
+  const sut = new LoadSurveysController(loadSurveysSpy)
   return {
     sut,
-    loadSurveysStub
+    loadSurveysSpy
   }
 }
 
@@ -33,10 +32,9 @@ describe('LoadSurveysController', () => {
   })
 
   test('should call loadSurveys', async () => {
-    const { sut, loadSurveysStub } = makeSUT()
-    const loadSpy = jest.spyOn(loadSurveysStub, 'load')
+    const { sut, loadSurveysSpy } = makeSUT()
     await sut.handle({})
-    expect(loadSpy).toHaveBeenCalled()
+    expect(loadSurveysSpy.callCount).toEqual(1)
   })
 
   test('should return 200 on success', async () => {
@@ -46,15 +44,15 @@ describe('LoadSurveysController', () => {
   })
 
   test('should return 204 if there are no surveys', async () => {
-    const { sut, loadSurveysStub } = makeSUT()
-    jest.spyOn(loadSurveysStub, 'load').mockResolvedValueOnce([])
+    const { sut, loadSurveysSpy } = makeSUT()
+    loadSurveysSpy.surveysModel = []
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(noContent())
   })
 
   test('should return 500 if LoadSurveysStub throws', async () => {
-    const { sut, loadSurveysStub } = makeSUT()
-    jest.spyOn(loadSurveysStub, 'load').mockImplementationOnce(throwError)
+    const { sut, loadSurveysSpy } = makeSUT()
+    jest.spyOn(loadSurveysSpy, 'load').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(serverError(new Error()))
   })

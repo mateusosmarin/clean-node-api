@@ -1,26 +1,26 @@
+import { throwError } from '@domain/test'
 import { InvalidParamError } from '@presentation/errors'
-import { EmailValidator } from '@validation/protocols/email-validator'
-import { mockEmailValidator } from '@validation/test'
+import { EmailValidatorSpy } from '@validation/test'
 import { EmailValidation } from './email-validation'
 
 type SUTTypes = {
-  emailValidatorStub: EmailValidator
   sut: EmailValidation
+  emailValidatorSpy: EmailValidatorSpy
 }
 
 const makeSUT = (): SUTTypes => {
-  const emailValidatorStub = mockEmailValidator()
-  const sut = new EmailValidation('email', emailValidatorStub)
+  const emailValidatorSpy = new EmailValidatorSpy()
+  const sut = new EmailValidation('email', emailValidatorSpy)
   return {
-    emailValidatorStub,
-    sut
+    sut,
+    emailValidatorSpy
   }
 }
 
 describe('EmailValidation', () => {
   test('Should return an error if EmailValidator returns false', () => {
-    const { sut, emailValidatorStub } = makeSUT()
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
+    const { sut, emailValidatorSpy } = makeSUT()
+    emailValidatorSpy.isEmailValid = false
     const error = sut.validate({
       email: 'any_email@mail.com'
     })
@@ -28,19 +28,16 @@ describe('EmailValidation', () => {
   })
 
   test('Should call EmailValidator with correct email', () => {
-    const { sut, emailValidatorStub } = makeSUT()
-    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+    const { sut, emailValidatorSpy } = makeSUT()
     sut.validate({
       email: 'any_email@mail.com'
     })
-    expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
+    expect(emailValidatorSpy.email).toEqual('any_email@mail.com')
   })
 
   test('Should throw if EmailValidator throws', async () => {
-    const { sut, emailValidatorStub } = makeSUT()
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error()
-    })
+    const { sut, emailValidatorSpy } = makeSUT()
+    jest.spyOn(emailValidatorSpy, 'isValid').mockImplementationOnce(throwError)
     expect(sut.validate).toThrow()
   })
 })
