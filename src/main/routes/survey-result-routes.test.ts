@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { mongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 import app from '@main/config/app'
 import env from '@main/config/env'
@@ -53,35 +54,38 @@ describe('Survey Result Routes', () => {
 
   describe('PUT /surveys/:surveyId/results', () => {
     test('Should return 403 on save survey result without access token', async () => {
+      const surveyId = faker.datatype.uuid()
       await request(app)
-        .put('/api/surveys/any_id/results')
+        .put(`/api/surveys/${surveyId}/results`)
         .send({
-          answer: 'any_answer'
+          answer: faker.random.words()
         })
         .expect(403)
     })
 
     test('Should return 200 on save survey result with access token', async () => {
+      const answer = faker.random.words()
       const result = await surveyCollection.insertOne({
-        question: 'Question',
+        question: faker.random.words(),
         answers: [
           {
-            answer: 'Answer 1',
-            image: 'http://image-name.com'
+            answer,
+            image: faker.image.imageUrl()
           },
           {
-            answer: 'Answer 2',
-            image: 'http://image-name.com'
+            answer: faker.random.words(),
+            image: faker.image.imageUrl()
           }
         ],
-        date: new Date()
+        date: faker.date.recent()
       })
+      const surveyId = String(result.ops[0]._id)
       const accessToken = await makeAccessToken()
       await request(app)
-        .put(`/api/surveys/${String(result.ops[0]._id)}/results`)
+        .put(`/api/surveys/${surveyId}/results`)
         .set('x-access-token', accessToken)
         .send({
-          answer: 'Answer 1'
+          answer
         })
         .expect(200)
     })
@@ -89,27 +93,29 @@ describe('Survey Result Routes', () => {
 
   describe('GET /surveys/:surveyId/results', () => {
     test('Should return 403 on load survey result without access token', async () => {
-      await request(app).get('/api/surveys/any_id/results').expect(403)
+      const surveyId = faker.datatype.uuid()
+      await request(app).get(`/api/surveys/${surveyId}/results`).expect(403)
     })
 
     test('Should return 200 on load survey result with access token', async () => {
       const result = await surveyCollection.insertOne({
-        question: 'Question',
+        question: faker.random.words(),
         answers: [
           {
-            answer: 'Answer 1',
-            image: 'http://image-name.com'
+            answer: faker.random.words(),
+            image: faker.image.imageUrl()
           },
           {
-            answer: 'Answer 2',
-            image: 'http://image-name.com'
+            answer: faker.random.words(),
+            image: faker.image.imageUrl()
           }
         ],
-        date: new Date()
+        date: faker.date.recent()
       })
+      const surveyId = String(result.ops[0]._id)
       const accessToken = await makeAccessToken()
       await request(app)
-        .get(`/api/surveys/${String(result.ops[0]._id)}/results`)
+        .get(`/api/surveys/${surveyId}/results`)
         .set('x-access-token', accessToken)
         .expect(200)
     })

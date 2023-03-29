@@ -16,7 +16,7 @@ export class DbLoadSurveyResult implements LoadSurveyResult {
     if (!surveyResult) {
       const survey = await this.LoadSurveyByIdRepository.loadById(surveyId)
       return {
-        surveyId,
+        surveyId: survey.id,
         question: survey.question,
         date: survey.date,
         answers: survey.answers.map((answer) =>

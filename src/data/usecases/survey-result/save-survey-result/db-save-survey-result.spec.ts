@@ -2,11 +2,7 @@ import {
   LoadSurveyResultRepositorySpy,
   SaveSurveyResultRepositorySpy
 } from '@data/test'
-import {
-  mockSaveSurveyResultParams,
-  mockSurveyResultModel,
-  throwError
-} from '@domain/test'
+import { mockSaveSurveyResultParams, throwError } from '@domain/test'
 import MockDate from 'mockdate'
 import { DbSaveSurveyResult } from './db-save-survey-result'
 
@@ -44,7 +40,7 @@ describe('DbSaveSurveyResult UseCase', () => {
     const surveyData = mockSaveSurveyResultParams()
     await sut.save(surveyData)
     expect(saveSurveyResultRepositorySpy.saveSurveyResultParams).toEqual(
-      mockSaveSurveyResultParams()
+      surveyData
     )
   })
 
@@ -77,8 +73,10 @@ describe('DbSaveSurveyResult UseCase', () => {
   })
 
   test('Should return SurveyResult on success', async () => {
-    const { sut } = makeSUT()
+    const { sut, loadSurveyResultRepositorySpy } = makeSUT()
     const surveyResult = await sut.save(mockSaveSurveyResultParams())
-    expect(surveyResult).toEqual(mockSurveyResultModel())
+    expect(surveyResult).toEqual(
+      loadSurveyResultRepositorySpy.surveyResultModel
+    )
   })
 })

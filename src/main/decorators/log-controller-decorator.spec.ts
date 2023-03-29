@@ -1,5 +1,6 @@
 import { LogErrorRepositorySpy } from '@data/test'
 import { mockAccountModel } from '@domain/test'
+import { faker } from '@faker-js/faker'
 import { ok, serverError } from '@presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols'
 import { LogControllerDecorator } from './log-controller-decorator'
@@ -10,18 +11,21 @@ type SUTTypes = {
   logErrorRepositorySpy: LogErrorRepositorySpy
 }
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    name: 'any name',
-    email: 'any_email@email.com',
-    password: 'any password',
-    passwordConfirmation: 'any password'
+const mockRequest = (): HttpRequest => {
+  const password = faker.internet.password()
+  return {
+    body: {
+      name: faker.name.firstName(),
+      email: faker.internet.email(),
+      password,
+      passwordConfirmation: password
+    }
   }
-})
+}
 
 const mockServerError = (): HttpResponse => {
   const fakeError = new Error()
-  fakeError.stack = 'any_stack'
+  fakeError.stack = faker.random.words()
   return serverError(fakeError)
 }
 
@@ -49,20 +53,22 @@ const makeSUT = (): SUTTypes => {
 describe('LogControllerDecorator', () => {
   test('Should call controller handle', async () => {
     const { sut, controllerSpy } = makeSUT()
-    await sut.handle(mockRequest())
-    expect(controllerSpy.httpRequest).toEqual(mockRequest())
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(controllerSpy.httpRequest).toEqual(httpRequest)
   })
 
   test('Should return the same result of the controller', async () => {
-    const { sut } = makeSUT()
+    const { sut, controllerSpy } = makeSUT()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(mockAccountModel()))
+    expect(httpResponse).toEqual(controllerSpy.httpResponse)
   })
 
   test('Should call LogErrorRepository with correct error if controller returns a server error', async () => {
     const { sut, controllerSpy, logErrorRepositorySpy } = makeSUT()
-    controllerSpy.httpResponse = mockServerError()
+    const serverError = mockServerError()
+    controllerSpy.httpResponse = serverError
     await sut.handle(mockRequest())
-    expect(logErrorRepositorySpy.stack).toEqual('any_stack')
+    expect(logErrorRepositorySpy.stack).toEqual(serverError.body.stack)
   })
 })

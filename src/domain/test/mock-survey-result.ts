@@ -1,43 +1,50 @@
 import { SurveyResultModel } from '@domain/models/survey-result'
 import { SaveSurveyResultParams } from '@domain/usecases/survey-result/save-survey-result'
+import { faker } from '@faker-js/faker'
 
 export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
-  accountId: 'any_account_id',
-  surveyId: 'any_survey_id',
-  answer: 'any_answer',
-  date: new Date()
+  accountId: faker.datatype.uuid(),
+  surveyId: faker.datatype.uuid(),
+  answer: faker.random.words(),
+  date: faker.date.recent()
 })
 
 export const mockSurveyResultModel = (): SurveyResultModel => ({
-  surveyId: 'any_survey_id',
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer',
-    count: 1,
-    percent: 50
-  }, {
-    image: 'other_image',
-    answer: 'other_answer',
-    count: 1,
-    percent: 50
-  }],
-  date: new Date()
+  surveyId: faker.datatype.uuid(),
+  question: faker.random.words(),
+  answers: [
+    {
+      image: faker.image.imageUrl(),
+      answer: faker.random.words(),
+      count: faker.datatype.number({ min: 0, max: 100 }),
+      percent: faker.datatype.number({ min: 0, max: 100 })
+    },
+    {
+      image: faker.image.imageUrl(),
+      answer: faker.random.words(),
+      count: faker.datatype.number({ min: 0, max: 100 }),
+      percent: faker.datatype.number({ min: 0, max: 100 })
+    }
+  ],
+  date: faker.date.recent()
 })
 
 export const mockEmptySurveyResultModel = (): SurveyResultModel => ({
-  surveyId: 'any_id',
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer',
-    count: 0,
-    percent: 0
-  }, {
-    image: 'other_image',
-    answer: 'other_answer',
-    count: 0,
-    percent: 0
-  }],
-  date: new Date()
+  surveyId: faker.datatype.uuid(),
+  question: faker.random.words(),
+  answers: [
+    {
+      image: faker.image.imageUrl(),
+      answer: faker.random.words(),
+      count: faker.datatype.number({ min: 0, max: 100 }),
+      percent: faker.datatype.number({ min: 0, max: 100 })
+    },
+    {
+      image: faker.image.imageUrl(),
+      answer: faker.random.words(),
+      count: faker.datatype.number({ min: 0, max: 100 }),
+      percent: faker.datatype.number({ min: 0, max: 100 })
+    }
+  ],
+  date: faker.date.recent()
 })

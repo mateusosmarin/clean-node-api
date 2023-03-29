@@ -8,10 +8,11 @@ import { AddAccountParams } from '@domain/usecases/account/add-account'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   account: AddAccountParams
+  accountModel = mockAccountModel()
 
   async add (account: AddAccountParams): Promise<AccountModel> {
     this.account = account
-    return mockAccountModel()
+    return this.accountModel
   }
 }
 

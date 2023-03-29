@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { MissingParamError } from '@presentation/errors'
 import { ValidationSpy } from '@validation/test'
 import { ValidationComposite } from './validation-composite'
@@ -14,24 +15,30 @@ const makeSUT = (): SuTypes => {
 }
 
 describe('ValidationComposite', () => {
+  let field: string
+
+  beforeEach(() => {
+    field = faker.random.word()
+  })
+
   test('Should return an error if any validation fails', () => {
     const { sut, validationSpies } = makeSUT()
-    validationSpies[0].error = new MissingParamError('field')
+    validationSpies[0].error = new MissingParamError(field)
     const error = sut.validate({})
-    expect(error).toEqual(new MissingParamError('field'))
+    expect(error).toEqual(new MissingParamError(field))
   })
 
   test('Should return the first error if more than one validation fails', () => {
     const { sut, validationSpies } = makeSUT()
     validationSpies[0].error = new Error()
-    validationSpies[1].error = new MissingParamError('field')
+    validationSpies[1].error = new MissingParamError(field)
     const error = sut.validate({})
     expect(error).toEqual(new Error())
   })
 
   test('Should not return if validation succeeds', () => {
     const { sut } = makeSUT()
-    const error = sut.validate({ field: 'any_value' })
+    const error = sut.validate({ [field]: faker.random.word() })
     expect(error).toBeUndefined()
   })
 })

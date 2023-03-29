@@ -1,5 +1,6 @@
 import { AccountModel } from '@domain/models/account'
 import { SurveyModel } from '@domain/models/survey'
+import { faker } from '@faker-js/faker'
 import { mongoHelper } from '@infra/db/mongodb/helpers/mongo-helper'
 import { Collection, ObjectId } from 'mongodb'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
@@ -15,14 +16,14 @@ describe('SurveyResult Mongo Repository', () => {
 
   const makeSurvey = async (): Promise<SurveyModel> => {
     const result = await surveyCollection.insertOne({
-      question: 'any_question',
+      question: faker.random.words(),
       answers: [
         {
-          image: 'any_image',
-          answer: 'any_answer_1'
+          image: faker.image.imageUrl(),
+          answer: faker.random.words()
         },
         {
-          answer: 'any_answer_2'
+          answer: faker.random.words()
         }
       ],
       date: new Date()
@@ -32,9 +33,9 @@ describe('SurveyResult Mongo Repository', () => {
 
   const makeAccount = async (): Promise<AccountModel> => {
     const result = await accountCollection.insertOne({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password'
+      name: faker.name.firstName(),
+      email: faker.internet.email(),
+      password: faker.internet.password()
     })
     return mongoHelper.map(result.ops[0])
   }

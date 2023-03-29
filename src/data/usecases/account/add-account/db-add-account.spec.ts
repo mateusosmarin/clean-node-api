@@ -52,12 +52,13 @@ describe('DbAddAccount', () => {
   })
 
   test('Should call AddAccountRepository with correct values', async () => {
-    const { sut, addAccountRepositorySpy } = makeSUT()
-    await sut.add(mockAddAccountParams())
+    const { sut, addAccountRepositorySpy, hasherSpy } = makeSUT()
+    const addAccountParams = mockAddAccountParams()
+    await sut.add(addAccountParams)
     expect(addAccountRepositorySpy.account).toEqual({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password'
+      name: addAccountParams.name,
+      email: addAccountParams.email,
+      password: hasherSpy.digest
     })
   })
 
@@ -69,9 +70,9 @@ describe('DbAddAccount', () => {
   })
 
   test('Should return an account on success', async () => {
-    const { sut } = makeSUT()
+    const { sut, addAccountRepositorySpy } = makeSUT()
     const account = await sut.add(mockAddAccountParams())
-    expect(account).toEqual(mockAccountModel())
+    expect(account).toEqual(addAccountRepositorySpy.accountModel)
   })
 
   test('Should throw EmailInUseError if LoadAccountByEmailRepository returns not null', async () => {
@@ -83,7 +84,8 @@ describe('DbAddAccount', () => {
 
   test('Should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSUT()
-    await sut.add(mockAddAccountParams())
-    expect(loadAccountByEmailRepositorySpy.email).toEqual('any_email@mail.com')
+    const addAccountParams = mockAddAccountParams()
+    await sut.add(addAccountParams)
+    expect(loadAccountByEmailRepositorySpy.email).toEqual(addAccountParams.email)
   })
 })

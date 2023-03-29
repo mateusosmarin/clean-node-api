@@ -1,17 +1,19 @@
-import { mockSurveyResultModel, throwError } from '@domain/test'
+import { throwError } from '@domain/test'
+import { faker } from '@faker-js/faker'
 import { InvalidParamError } from '@presentation/errors'
 import { LoadSurveyByIdSpy, LoadSurveyResultSpy } from '@presentation/test'
 import MockDate from 'mockdate'
 import { LoadSurveyResultController } from './load-survey-result-controller'
 import {
   forbidden,
-  HttpRequest, ok,
+  HttpRequest,
+  ok,
   serverError
 } from './load-survey-result-controller-protocols'
 
 const mockRequest = (): HttpRequest => ({
   params: {
-    surveyId: 'any_id'
+    surveyId: faker.datatype.uuid()
   }
 })
 
@@ -42,8 +44,9 @@ describe('LoadSurveyResultController', () => {
 
   test('Should call LoadSurveyById with correct value', async () => {
     const { sut, loadSurveyByIdSpy } = makeSUT()
-    await sut.handle(mockRequest())
-    expect(loadSurveyByIdSpy.id).toEqual('any_id')
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(loadSurveyByIdSpy.id).toEqual(httpRequest.params.surveyId)
   })
 
   test('Should return 403 if LoadSurveyById returns null', async () => {
@@ -62,8 +65,9 @@ describe('LoadSurveyResultController', () => {
 
   test('Should call LoadSurveyResult with correct value', async () => {
     const { sut, loadSurveyResultSpy } = makeSUT()
-    await sut.handle(mockRequest())
-    expect(loadSurveyResultSpy.surveyId).toEqual('any_id')
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(loadSurveyResultSpy.surveyId).toEqual(httpRequest.params.surveyId)
   })
 
   test('Should return 500 if LoadSurveyById throws', async () => {
@@ -74,8 +78,8 @@ describe('LoadSurveyResultController', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut } = makeSUT()
+    const { sut, loadSurveyResultSpy } = makeSUT()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(mockSurveyResultModel()))
+    expect(httpResponse).toEqual(ok(loadSurveyResultSpy.surveyResultModel))
   })
 })

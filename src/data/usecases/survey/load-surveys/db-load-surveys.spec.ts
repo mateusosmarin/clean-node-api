@@ -1,5 +1,5 @@
 import { LoadSurveysRepositorySpy } from '@data/test/mock-db-survey'
-import { mockSurveysModel, throwError } from '@domain/test'
+import { throwError } from '@domain/test'
 import MockDate from 'mockdate'
 import { DbLoadSurveys } from './db-load-surveys'
 
@@ -33,9 +33,9 @@ describe('DbLoadSurveys', () => {
   })
 
   test('Should return a list of surveys on success', async () => {
-    const { sut } = makeSUT()
+    const { sut, loadSurveysRepositorySpy } = makeSUT()
     const surveys = await sut.load()
-    expect(surveys).toEqual(mockSurveysModel())
+    expect(surveys).toEqual(loadSurveysRepositorySpy.surveysModel)
   })
 
   test('Should throw if LoadSurveysRepository throws', async () => {

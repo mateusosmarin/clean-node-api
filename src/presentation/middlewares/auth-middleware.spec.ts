@@ -1,4 +1,5 @@
 import { throwError } from '@domain/test'
+import { faker } from '@faker-js/faker'
 import { AccessDeniedError } from '@presentation/errors'
 import {
   forbidden,
@@ -25,7 +26,7 @@ const makeSUT = (role?: string): SUTTypes => {
 
 const mockRequest = (): HttpRequest => ({
   headers: {
-    'x-access-token': 'any_token'
+    'x-access-token': faker.datatype.uuid()
   }
 })
 
@@ -37,10 +38,13 @@ describe('Auth Middleware', () => {
   })
 
   test('Should call LoadAccountByToken with correct accessToken', async () => {
-    const role = 'any_role'
+    const role = faker.random.word()
     const { sut, loadAccountByTokenSpy } = makeSUT(role)
-    await sut.handle(mockRequest())
-    expect(loadAccountByTokenSpy.accessToken).toEqual('any_token')
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(loadAccountByTokenSpy.accessToken).toEqual(
+      httpRequest.headers['x-access-token']
+    )
     expect(loadAccountByTokenSpy.role).toEqual(role)
   })
 
@@ -52,9 +56,11 @@ describe('Auth Middleware', () => {
   })
 
   test('Should return 200 if LoadAccountByToken returns an account', async () => {
-    const { sut } = makeSUT()
+    const { sut, loadAccountByTokenSpy } = makeSUT()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok({ accountId: 'any_id' }))
+    expect(httpResponse).toEqual(
+      ok({ accountId: loadAccountByTokenSpy.accountModel?.id })
+    )
   })
 
   test('Should return 500 if LoadAccountByToken throws', async () => {

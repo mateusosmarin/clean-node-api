@@ -1,4 +1,5 @@
 import { throwError } from '@domain/test'
+import { faker } from '@faker-js/faker'
 import {
   badRequest,
   noContent,
@@ -28,11 +29,11 @@ const makeSUT = (): SUTTypes => {
 
 const mockRequest = (): HttpRequest => ({
   body: {
-    question: 'any_question',
+    question: faker.random.words(),
     answers: [
       {
-        image: 'any_image',
-        answer: 'any_answer'
+        image: faker.image.imageUrl(),
+        answer: faker.random.words()
       }
     ],
     date: new Date()

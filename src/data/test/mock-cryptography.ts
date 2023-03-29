@@ -2,19 +2,21 @@ import { Decrypter } from '@data/protocols/cryptography/decrypter'
 import { Encrypter } from '@data/protocols/cryptography/encrypter'
 import { HashComparer } from '@data/protocols/cryptography/hash-comparer'
 import { Hasher } from '@data/protocols/cryptography/hasher'
+import { faker } from '@faker-js/faker'
 
 export class HasherSpy implements Hasher {
   plaintext: string
+  digest = faker.datatype.uuid()
 
   async hash (plaintext: string): Promise<string> {
     this.plaintext = plaintext
-    return 'hashed_password'
+    return this.digest
   }
 }
 
 export class DecrypterSpy implements Decrypter {
   ciphertext: string
-  plaintext: string | null = 'decrypted_token'
+  plaintext: string | null = faker.random.words()
 
   async decrypt (ciphertext: string): Promise<string | null> {
     this.ciphertext = ciphertext
@@ -24,10 +26,11 @@ export class DecrypterSpy implements Decrypter {
 
 export class EncrypterSpy implements Encrypter {
   plaintext: string
+  ciphertext = faker.datatype.uuid()
 
   async encrypt (plaintext: string): Promise<string> {
     this.plaintext = plaintext
-    return 'any_token'
+    return this.ciphertext
   }
 }
 

@@ -1,4 +1,4 @@
-import { mockSurveysModel, throwError } from '@domain/test'
+import { throwError } from '@domain/test'
 import {
   noContent,
   ok,
@@ -38,9 +38,9 @@ describe('LoadSurveysController', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut } = makeSUT()
+    const { sut, loadSurveysSpy } = makeSUT()
     const httpResponse = await sut.handle({})
-    expect(httpResponse).toEqual(ok(mockSurveysModel()))
+    expect(httpResponse).toEqual(ok(loadSurveysSpy.surveysModel))
   })
 
   test('Should return 204 if there are no surveys', async () => {
