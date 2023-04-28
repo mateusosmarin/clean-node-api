@@ -3,9 +3,10 @@ import {
   AuthenticationParams
 } from '@domain/usecases/account/authentication'
 import {
+  AuthenticationModel,
+  Encrypter,
   HashComparer,
   LoadAccountByEmailRepository,
-  Encrypter,
   UpdateAccessTokenRepository
 } from './db-authentication-protocols'
 
@@ -17,7 +18,9 @@ export class DbAuthentication implements Authentication {
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
-  async auth (authentication: AuthenticationParams): Promise<string | null> {
+  async auth (
+    authentication: AuthenticationParams
+  ): Promise<AuthenticationModel | null> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(
       authentication.email
     )
@@ -32,7 +35,10 @@ export class DbAuthentication implements Authentication {
           account.id,
           accessToken
         )
-        return accessToken
+        return {
+          accessToken,
+          name: account.name
+        }
       }
     }
     return null

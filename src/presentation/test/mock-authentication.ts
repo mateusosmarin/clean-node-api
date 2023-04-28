@@ -1,3 +1,4 @@
+import { AuthenticationModel } from '@domain/models/authentication'
 import {
   Authentication,
   AuthenticationParams
@@ -6,12 +7,15 @@ import { faker } from '@faker-js/faker'
 
 export class AuthenticationSpy implements Authentication {
   authenticationParams: AuthenticationParams
-  token: string | null = faker.datatype.uuid()
+  authenticationModel: AuthenticationModel | null = {
+    accessToken: faker.datatype.uuid(),
+    name: faker.name.firstName()
+  }
 
   async auth (
     authenticationParams: AuthenticationParams
-  ): Promise<string | null> {
+  ): Promise<AuthenticationModel | null> {
     this.authenticationParams = authenticationParams
-    return this.token
+    return this.authenticationModel
   }
 }
